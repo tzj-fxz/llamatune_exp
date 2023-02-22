@@ -2,6 +2,7 @@ import json
 from copy import deepcopy
 from importlib import import_module
 from pathlib import Path
+import sys
 
 import ConfigSpace as CS
 import ConfigSpace.hyperparameters as CSH
@@ -74,15 +75,23 @@ class ConfigSpaceGenerator:
             if knob_type == 'enum':
                 dim = CSH.CategoricalHyperparameter(
                         name=name,
-                        choices=info['choices'],
+                        # choices=info['choices'],
+                        choices=info['enum_values'],
                         default_value=info['default'])
             ## Numerical
             elif knob_type == 'integer':
-                dim = CSH.UniformIntegerHyperparameter(
+                if (info['max'] > sys.maxsize): # avoid overflow
+                    dim = CSH.UniformIntegerHyperparameter(
                         name=name,
-                        lower=info['min'],
-                        upper=info['max'],
-                        default_value=info['default'])
+                        lower=int(info['min']/1000),
+                        upper=int(info['max']/1000),
+                        default_value=int(info['default']/1000))
+                else:
+                    dim = CSH.UniformIntegerHyperparameter(
+                            name=name,
+                            lower=info['min'],
+                            upper=info['max'],
+                            default_value=info['default'])
             elif knob_type == 'real':
                 dim = CSH.UniformFloatHyperparameter(
                         name=name,
@@ -172,10 +181,18 @@ class ConfigSpaceGenerator:
                 'Linear embedding low dimension is only valid in REMBO & HesBO'
 
         # Read space definition from json file
-        definition_fp = Path('./spaces/definitions') / f"{spaces_config['definition']}.json"
+        definition_fp = config['database']['knob_config_file']
+        # definition_fp = Path('./spaces/definitions') / f"{spaces_config['definition']}.json"
         with open(definition_fp, 'r') as f:
             definition = json.load(f)
-        all_knobs_name = [ d['name'] for d in definition ]
+        definition_dict = list()
+        for item in definition.items():        
+            definition_dict.append(dict())
+            definition_dict[-1] = item[1]
+            definition_dict[-1]['name'] = item[0]
+            if (len(definition_dict) >= int(config['database']['knob_num'])):
+                break
+        all_knobs_name = [ item['name'] for item in definition_dict ]
 
         # Import designated module and utilize knobs
         include = 'include' in spaces_config
@@ -187,7 +204,8 @@ class ConfigSpaceGenerator:
         finalize_conf_func = getattr(module, 'finalize_conf')
         unfinalize_conf_func = getattr(module, 'unfinalize_conf')
 
-        return cls(definition=definition,
+        # return cls(definition=definition,
+        return cls(definition=definition_dict,
             include=knobs if include else None,
             ignore=knobs if not include else None,
             target_metric=spaces_config['target_metric'],

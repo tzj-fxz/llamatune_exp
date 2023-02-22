@@ -92,6 +92,7 @@ KNOBS_WITH_SPECIAL_VALUES = {
 }
 
 def special_value_scaler(hp, value):
+    print("Special_value_scaler: ", hp, value)
     if value < hp._special_value_prob:
         # Fix value to special value
         return hp._inverse_transform(hp._special_value)
@@ -104,6 +105,7 @@ class UniformIntegerHyperparameterWithSpecialValue(CS.UniformIntegerHyperparamet
     def __init__(self, *args, special_value: Optional[int] = None,
                             special_value_prob: Optional[float], **kwargs):
         super().__init__(*args, **kwargs)
+        print("Special handle")
 
         assert special_value >= self.lower and special_value <= self.upper, \
             ('Special value [=%d] should be inside the range' % special_value)
@@ -209,6 +211,7 @@ class PostgresBiasSampling:
         self._build_biased_config_space()
 
     def _build_biased_config_space(self):
+        print("Build Postgres biased config space")
         root_hyperparams = [ ]
         for adaptee_hp in self.adaptee.get_hyperparameters():
 

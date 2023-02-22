@@ -24,6 +24,7 @@ class Quantization:
         self._build_space()
 
     def _build_space(self):
+        print("Bucketization of knob values")
         self._knobs_scalers = { }
 
         root_hyperparams = [ ]
@@ -74,6 +75,7 @@ class Quantization:
         raise NotImplementedError()
 
     def unproject_point(self, point: CS.Configuration) -> dict:
+        print("Quantization: unproject")
         coords = point.get_dictionary()
         valid_dim_names = [ dim.name for dim in self.adaptee.get_hyperparameters() ]
         unproject_coords = { }

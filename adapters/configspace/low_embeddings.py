@@ -74,6 +74,7 @@ class LinearEmbeddingConfigSpace(ABC):
 class REMBOConfigSpace(LinearEmbeddingConfigSpace):
 
     def _build_space(self):
+        print("Linear Embedding: REMBO build space")
         self.active_hps = self._get_active_hps()
 
         # Create lower dimensionality configuration space
@@ -119,6 +120,7 @@ class REMBOConfigSpace(LinearEmbeddingConfigSpace):
             0, 1, (len(self.active_hps), self._target_dim))
 
     def unproject_point(self, point: CS.Configuration) -> dict:
+        print("Linear Embedding: REMBO unproject")
         low_dim_point = np.array([
             point.get(f'rembo_{idx}') for idx in range(len(point)) ])
 
@@ -167,6 +169,7 @@ class REMBOConfigSpace(LinearEmbeddingConfigSpace):
 class HesBOConfigSpace(LinearEmbeddingConfigSpace):
 
     def _build_space(self):
+        print("Linear Embedding: HesBO build space")
         self.active_hps = self._get_active_hps()
 
         # Create lower dimensionality configuration space
@@ -206,6 +209,7 @@ class HesBOConfigSpace(LinearEmbeddingConfigSpace):
         self._sigma = self._rs.choice([-1, 1], len(self.active_hps))
 
     def unproject_point(self, point: CS.Configuration) -> dict:
+        print("Linear Embedding: HesBO unproject")
         low_dim_point = [
             point.get(f'hesbo_{idx}') for idx in range(len(point)) ]
 

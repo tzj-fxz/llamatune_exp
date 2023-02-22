@@ -1,0 +1,137 @@
+{
+  "name": "input",
+  "hyperparameters": [
+    {
+      "name": "hesbo_0",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_1",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_10",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_11",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_12",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_13",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_14",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_15",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_2",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_3",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_4",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_5",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_6",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_7",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_8",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    },
+    {
+      "name": "hesbo_9",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -1.0,
+      "upper": 1.0,
+      "default": 0.0
+    }
+  ],
+  "conditions": [],
+  "forbiddens": [],
+  "python_module_version": "0.4.20",
+  "json_format_version": 0.2
+}

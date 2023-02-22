@@ -75,15 +75,15 @@ class Configuration:
 
     def _postprocess(self):
         # Save dbms_info
-        assert 'dbms_info' in self.dict, 'Section `dbms_info` not specified'
-        self._dbms_info = self.dict['dbms_info']
+        # assert 'dbms_info' in self.dict, 'Section `dbms_info` not specified'
+        self._dbms_info = dict({'name': self.dict['database']['db']})
 
         if 'version' not in self._dbms_info:
             self._dbms_info['version'] = '9.6'
 
         # Save benchmark_info
-        assert 'benchmark_info' in self.dict, 'Section `benchmark_info` not specified'
-        self._benchmark_info = self.dict['benchmark_info']
+        # assert 'benchmark_info' in self.dict, 'Section `benchmark_info` not specified'
+        self._benchmark_info = dict({'name': self.dict['database']['dbname'], 'workload': self.dict['database']['workload']})
 
         benchmark_name, workload = (
             self._benchmark_info['name'], self._benchmark_info['workload'])
@@ -108,7 +108,8 @@ class Configuration:
 
         self._benchmark_info.update(
             workload=workload,
-            warmup_duration=workload_defaults['WARMUP_DURATION_SECS'],
+            # warmup_duration=workload_defaults['WARMUP_DURATION_SECS'],
+            warmup_duration=self.dict['database']['workload_warmup_time'],
             benchmark_duration=workload_defaults['BENCHMARK_DURATION_SECS'],
             workload_properties=workload_properties,
         )

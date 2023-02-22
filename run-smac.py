@@ -15,6 +15,13 @@ from storage import StorageFactory
 
 from smac.facade.smac_hpo_facade import SMAC4AC
 
+from autotune.utils.config import parse_args
+# from autotune.database.mysqldb import MysqlDB
+# from autotune.database.postgresqldb import PostgresqlDB
+from autotune.dbenv import DBEnv
+from autotune.tuner import DBTuner
+import argparse
+
 # pylint: disable=logging-fstring-interpolation
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -70,7 +77,7 @@ class ExperimentState:
 
 
 def evaluate_dbms_conf(sample, state=None):
-    global spaces, executor
+    global spaces, executor, env
 
     logger.info(f'\n\n{25*"="} Iteration {state.iter:2d} {25*"="}\n\n')
     logger.info('Sample from optimizer: ')
@@ -87,7 +94,8 @@ def evaluate_dbms_conf(sample, state=None):
         config=conf,
         version=state.dbms_info['version']
     )
-    perf_stats = executor.evaluate_configuration(dbms_info, state.benchmark_info)
+    perf_stats = env.step(conf)
+    # perf_stats = executor.evaluate_configuration(dbms_info, state.benchmark_info)
     logger.info(f'Performance Statistics:\n{perf_stats}')
 
     if state.default_perf_stats is None:
@@ -103,7 +111,8 @@ def evaluate_dbms_conf(sample, state=None):
             # Throughput less than default -- invalid round
             runtime, perf = perf_stats['runtime'], state.worse_perf
         else:
-            runtime, perf = perf_stats['runtime'], perf_stats[target_metric]
+            # runtime, perf = perf_stats['runtime'], perf_stats[target_metric]
+            runtime, perf = "test", perf_stats[2]['tps']
 
     logger.info(f'Evaluation took {runtime} seconds')
     if target_metric == 'throughput':
@@ -153,7 +162,7 @@ perf_label = 'Throughput' if target_metric == 'throughput' else 'Latency'
 columns = ['Iteration', perf_label, 'Optimum', 'Runtime']
 
 benchmark, workload = (
-    config['benchmark_info']['name'], config['benchmark_info']['workload'])
+    config['database']['dbname'], config['database']['workload'])
 
 inner_path = Path(f'{benchmark}.{workload}') / f'seed{args.seed}'
 storage = StorageFactory.from_config(config, columns=columns, inner_path=inner_path)
@@ -168,7 +177,17 @@ exp_state = ExperimentState(
     dbms_info_config, benchmark_info_config, results_path, target_metric)
 
 # Create a new optimizer
+
+args_db, args_tune = parse_args(args.conf_filepath)
+# Test
+# if args_db['db'] == 'mysql':
+#     db = MysqlDB(args_db)
+# elif args_db['db'] == 'postgresql':
+#     db = PostgresqlDB(args_db)
+db = None
+env = DBEnv(args_db, args_tune, db)
 optimizer = get_smac_optimizer(config, spaces, evaluate_dbms_conf, exp_state)
+# optimizer = get_smac_optimizer(config, spaces, env.step, exp_state)
 
 # init executor
 executor = ExecutorFactory.from_config(config, spaces, storage)
