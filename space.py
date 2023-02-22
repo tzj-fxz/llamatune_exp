@@ -77,7 +77,7 @@ class ConfigSpaceGenerator:
                         name=name,
                         # choices=info['choices'],
                         choices=info['enum_values'],
-                        default_value=info['default'])
+                        default_value=str(info['default']))
             ## Numerical
             elif knob_type == 'integer':
                 if (info['max'] > sys.maxsize): # avoid overflow
@@ -186,6 +186,7 @@ class ConfigSpaceGenerator:
         with open(definition_fp, 'r') as f:
             definition = json.load(f)
         definition_dict = list()
+
         for item in definition.items():        
             definition_dict.append(dict())
             definition_dict[-1] = item[1]

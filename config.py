@@ -84,23 +84,23 @@ class Configuration:
         # Save benchmark_info
         # assert 'benchmark_info' in self.dict, 'Section `benchmark_info` not specified'
         self._benchmark_info = dict({'name': self.dict['database']['dbname'], 'workload': self.dict['database']['workload']})
-
+        #self._benchmark_info = self.dict['benchmark_info']
         benchmark_name, workload = (
             self._benchmark_info['name'], self._benchmark_info['workload'])
-        assert benchmark_name in ['ycsb', 'oltpbench', 'benchbase']
-
-        if benchmark_name == 'ycsb':
-            workload_properties = ycsb_defaut_workload_properties
-        elif benchmark_name == 'oltpbench':
-            if workload.startswith('ycsb'):
-                workload_properties = oltpbench_default_workload_properties['ycsb']
-            else:
-                workload_properties = oltpbench_default_workload_properties[workload]
-        else: # benchbase
-            if workload.startswith('ycsb'):
-                workload_properties = benchbase_default_workload_properties['ycsb']
-            else:
-                workload_properties = benchbase_default_workload_properties[workload]
+        # assert benchmark_name in ['ycsb', 'oltpbench', 'benchbase']
+        workload_properties = None
+        # if benchmark_name == 'ycsb':
+        #     workload_properties = ycsb_defaut_workload_properties
+        # elif benchmark_name == 'oltpbench':
+        #     if workload.startswith('ycsb'):
+        #         workload_properties = oltpbench_default_workload_properties['ycsb']
+        #     else:
+        #         workload_properties = oltpbench_default_workload_properties[workload]
+        # else: # benchbase
+        #     if workload.startswith('ycsb'):
+        #         workload_properties = benchbase_default_workload_properties['ycsb']
+        #     else:
+        #         workload_properties = benchbase_default_workload_properties[workload]
 
         if workload.endswith('-lat'):
             # Provision for latency-focused configs

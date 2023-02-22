@@ -16,10 +16,9 @@ from storage import StorageFactory
 from smac.facade.smac_hpo_facade import SMAC4AC
 
 from autotune.utils.config import parse_args
-# from autotune.database.mysqldb import MysqlDB
+from autotune.database.mysqldb import MysqlDB
 # from autotune.database.postgresqldb import PostgresqlDB
 from autotune.dbenv import DBEnv
-from autotune.tuner import DBTuner
 import argparse
 
 # pylint: disable=logging-fstring-interpolation
@@ -77,7 +76,8 @@ class ExperimentState:
 
 
 def evaluate_dbms_conf(sample, state=None):
-    global spaces, executor, env
+    #global spaces, executor, env
+    global spaces, env
 
     logger.info(f'\n\n{25*"="} Iteration {state.iter:2d} {25*"="}\n\n')
     logger.info('Sample from optimizer: ')
@@ -89,11 +89,11 @@ def evaluate_dbms_conf(sample, state=None):
     logger.info(f'Evaluating Configuration:\n{conf}')
 
     ## Send configuration task to Nautilus
-    dbms_info = dict(
-        name=state.dbms_info['name'],
-        config=conf,
-        version=state.dbms_info['version']
-    )
+    # dbms_info = dict(
+    #     name=state.dbms_info['name'],
+    #     config=conf,
+    #     version=state.dbms_info['version']
+    # )
     perf_stats = env.step(conf)
     # perf_stats = executor.evaluate_configuration(dbms_info, state.benchmark_info)
     logger.info(f'Performance Statistics:\n{perf_stats}')
@@ -184,13 +184,13 @@ args_db, args_tune = parse_args(args.conf_filepath)
 #     db = MysqlDB(args_db)
 # elif args_db['db'] == 'postgresql':
 #     db = PostgresqlDB(args_db)
-db = None
+db = MysqlDB(args_db)
 env = DBEnv(args_db, args_tune, db)
 optimizer = get_smac_optimizer(config, spaces, evaluate_dbms_conf, exp_state)
 # optimizer = get_smac_optimizer(config, spaces, env.step, exp_state)
 
 # init executor
-executor = ExecutorFactory.from_config(config, spaces, storage)
+# executor = ExecutorFactory.from_config(config, spaces, storage)
 
 # evaluate on default config
 default_config = spaces.get_default_configuration()
